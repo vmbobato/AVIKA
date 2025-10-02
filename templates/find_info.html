@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section">
+  <div class="inner">
+    <div class="card">
+      <h1>Find Your Information</h1>
+      <p class="muted">Use this guide to locate your <strong>Account Number</strong> and <strong>Invoice Number</strong> so you can complete your payment quickly.</p>
+
+      <!-- Quick Links -->
+      <div class="grid" style="gap:12px; margin-top:16px;">
+        <a class="btn" href="/pay">Ready to pay?</a>
+        <a style="margin-left:8px" href="{{ url_for('contact') }}">Need help? Contact us →</a>
+      </div>
+
+      <!-- Account Number -->
+      <div class="section">
+        <h2>Where to find your Invoice Number</h2>
+        <ul class="list">
+          <li><strong>On your invoice:</strong> Look in the middle of the page for <em>"If paying by credit/debit card"</em>, your Account Number is listed below <em>Patient Account #</em>.</li>
+          <li><strong>By phone:</strong> Call us and we’ll verify your identity and provide it.</li>
+        </ul>
+        <h2>Where to find your Account Number</h2>
+        <ul class="list">
+          <li><strong>On your statement:</strong> Look in the bottom right corner for <em>“Invoice Details”</em>.</li>
+          <li><strong>By phone:</strong> Call us and we’ll verify your identity and provide it.</li>
+        </ul>
+        <!-- Placeholder for sample statement image -->
+        <div class="card" style="margin-top:12px">
+          <strong>Example Statement (placeholder)</strong>
+          <p class="muted">Replace this box with a screenshot or PDF snippet highlighting the Account # field.</p>
+        </div>
+      </div>
+
+      <!-- Practice Name -->
+      <div class="section">
+        <h2>Where to find your Practice Name</h2>
+        <ul class="list">
+          <li><strong>On your statement header</strong> (e.g., “Avika Practice – Houston”).</li>
+          <li><strong>Appointment reminders</strong> or <strong>visit summaries</strong>.</li>
+          <li><strong>Clinic signage</strong> or <strong>website</strong> from your last visit.</li>
+        </ul>
+        <div class="note" style="margin-top:10px">
+          If you saw more than one provider, list the clinic/department name printed on your statement.
+        </div>
+      </div>
+
+      <!-- Full Name -->
+      <div class="section">
+        <h2>Use your Legal Name</h2>
+        <p class="muted">
+          Enter your name exactly as it appears on your statement (first, middle initial if listed, last).
+          If a parent/guardian is the account holder, use the account holder’s name.
+        </p>
+      </div>
+
+      <!-- Quick Checker (front-end only) -->
+      <div class="section">
+        <h2>Quick Self-Check (optional)</h2>
+        <p class="muted">This does not submit anything — it just helps you format your info correctly.</p>
+        <form id="checker" class="grid" style="gap:12px; margin-top:8px" onsubmit="return false;">
+          <div style="display:flex; flex-direction:column;">
+            <label for="checkAccount">Account Number</label>
+            <input id="checkAccount" type="text" placeholder="e.g., 0012345">
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <label for="checkName">Full Name</label>
+            <input id="checkName" type="text" placeholder="e.g., Jane A. Doe">
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <label for="checkPractice">Practice Name</label>
+            <input id="checkPractice" type="text" placeholder="e.g., Avika Practice – Houston">
+          </div>
+          <button class="btn" id="checkBtn">Check Formatting</button>
+        </form>
+        <div id="checkResult" class="note" style="display:none; margin-top:10px;"></div>
+      </div>
+
+      <!-- FAQs -->
+      <div class="section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="card" style="margin-top:10px">
+          <p><strong>What if I can’t find my Account Number?</strong><br>
+             Email <a href="mailto:billing@avika-bs.com">billing@avika-bs.com</a> or call us at (281)-653-2924. We’ll verify your identity and help.</p>
+          <p><strong>What if my name changed?</strong><br>
+             Use the name printed on your latest statement or call us to update your account.</p>
+          <p><strong>Practice Name is unclear.</strong><br>
+             Use the clinic name on your statement. If you visited multiple locations, pick the one tied to the specific invoice.</p>
+        </div>
+      </div>
+
+      <!-- Help CTA -->
+      <div class="section">
+        <div class="card">
+          <h3>Still can’t find it?</h3>
+          <p>We’re happy to help. Reach out:</p>
+          <p><i class="fa-solid fa-envelope"></i> <a href="mailto:billing@avika-bs.com">billing@avika-bs.com</a></p>
+          <p><i class="fa-solid fa-phone"></i> (281)-653-2924</p>
+          <div style="margin-top:10px">
+            <a class="btn" href="{{ url_for('contact') }}">Open Contact Form</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const btn = document.getElementById('checkBtn');
+  const result = document.getElementById('checkResult');
+  const acct = document.getElementById('checkAccount');
+  const name = document.getElementById('checkName');
+  const prac = document.getElementById('checkPractice');
+
+  function padAccount(a){
+    // Example: left-pad to 7 digits (adjust to your policy)
+    const s = (a || '').replace(/\\D/g,'');
+    return s ? s.padStart(7,'0') : '';
+  }
+
+  btn.addEventListener('click', () => {
+    const a = padAccount(acct.value);
+    const n = (name.value || '').trim();
+    const p = (prac.value || '').trim();
+
+    let msgs = [];
+    if (!a) msgs.push("• Account Number looks empty or invalid. Try digits only (e.g., 0012345).");
+    if (!n) msgs.push("• Please add your full name (as on your statement).");
+    if (!p) msgs.push("• Please add your practice name (as on your statement).");
+
+    if (msgs.length){
+      result.style.display = 'block';
+      result.innerHTML = "<strong>Fix these:</strong><br>" + msgs.join("<br>");
+    } else {
+      result.style.display = 'block';
+      result.innerHTML = "<strong>Looks good!</strong><br>Account: <code>"+a+"</code><br>Name: "+n+"<br>Practice: "+p;
+    }
+  });
+})();
+</script>
+{% endblock %}

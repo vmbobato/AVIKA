@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="section">
+    <div class="inner">
+      <div class="card">
+        <h1>Contact Us</h1>
+        <p>Have a question about your bill or our services? Fill out the form below and we’ll get back to you.</p>
+
+        <form class="grid" style="gap:16px; margin-top:16px;" method="post">
+          <div style="display:flex; flex-direction:column;">
+            <label for="fullName">Full Name</label>
+            <input id="fullName" name="fullName" type="text" placeholder="Jane Doe" required>
+          </div>
+
+          <div style="display:flex; flex-direction:column;">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="jane@example.com" required>
+          </div>
+
+          <div style="display:flex; flex-direction:column;">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" placeholder="(555) 555-5555">
+          </div>
+
+          <div style="display:flex; flex-direction:column;">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="How can we help?" required></textarea>
+          </div>
+
+          <div>
+            <button class="btn" type="submit">Send Message</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </section>
+{% endblock %}

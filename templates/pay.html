@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="section">
+    <div class="inner">
+      <div class="card">
+        <h1>Pay My Bill</h1>
+        <p class="muted">Choose your payment type below.</p>
+
+        <div style="margin-top:20px; display:flex; gap:16px; flex-wrap:wrap;">
+          <a href="/pay-client" class="btn">Client Payment</a>
+          <a href="/pay-patient" class="btn">Patient Payment</a>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

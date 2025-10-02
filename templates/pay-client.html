@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section">
+  <div class="inner">
+    <div class="card">
+      <h1>Client Payment</h1>
+      <p class="muted">Use your Invoice Number, Name, and Practice Name to start your payment.</p>
+      <p class="muted">To find your invoice number <a href="/find-my-info">click here</a>.</p>
+
+      <form id="customer-pay-form" class="grid" style="gap:16px; margin-top:16px;" method="post" action="#">
+        <!-- Core payer fields -->
+        <div style="display:flex; flex-direction:column;">
+          <label for="invNumber">Invoice Number</label>
+          <input id="invNumber" name="invoiceNumber" type="text" placeholder="e.g., 3612" required>
+        </div>
+
+        <div style="display:flex; flex-direction:column;">
+          <label for="custName">Full Name</label>
+          <input id="custName" name="fullName" type="text" placeholder="Jane Doe" required>
+        </div>
+
+        <div style="display:flex; flex-direction:column;">
+          <label for="custPractice">Practice Name</label>
+          <input id="custPractice" name="practiceName" type="text" placeholder="Avika Practice" required>
+        </div>
+
+        <div style="display:flex; flex-direction:column;">
+          <label for="custAmount">Amount (USD)</label>
+          <input id="custAmount" name="amount" type="number" step="0.01" min="0" placeholder="125.00" required>
+        </div>
+
+        <!-- Payment method -->
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:6px;">
+          <label>Payment Method</label>
+          <div>
+            <label style="display:inline-flex; align-items:center; gap:8px; margin-right:18px;">
+              <input type="radio" name="method" value="ach" checked>
+              ACH (no fee)
+            </label>
+            <label style="display:inline-flex; align-items:center; gap:8px;">
+              <input type="radio" name="method" value="card">
+              Credit Card (+3.5% fee)
+            </label>
+          </div>
+        </div>
+
+        <!-- ACH fields -->
+        <fieldset id="custAchFields" class="grid" style="gap:12px; padding:12px; border:1px solid rgba(255,255,255,.15); border-radius:12px;">
+          <legend>ACH Details</legend>
+          <div style="display:flex; flex-direction:column;">
+            <label for="custHolder">Account Holder Name</label>
+            <input id="custHolder" name="ach_account_holder" type="text" placeholder="Jane Doe">
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <label for="custRouting">Routing Number</label>
+            <input id="custRouting" name="ach_routing" type="text" inputmode="numeric" placeholder="XXXXXXXXX" maxlength="9">
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <label for="custAchAcct">Account Number</label>
+            <input id="custAchAcct" name="ach_account" type="text" inputmode="numeric" placeholder="XXXXXXXXXXXX">
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <label for="custAcctType">Account Type</label>
+            <select id="custAcctType" name="ach_account_type">
+              <option value="">Select</option>
+              <option value="checking">Checking</option>
+              <option value="savings">Savings</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- Card fields -->
+        <fieldset id="custCardFields" class="grid" style="gap:12px; padding:12px; border:1px solid rgba(255,255,255,.15); border-radius:12px; display:none;">
+          <legend>Card Details</legend>
+          <div style="display:flex; flex-direction:column;">
+            <label for="custCardName">Name on Card</label>
+            <input id="custCardName" name="cc_name" type="text" placeholder="Jane Doe">
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <label for="custCardNumber">Card Number</label>
+            <input id="custCardNumber" name="cc_number" type="text" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="19">
+          </div>
+          <div class="row row-2">
+            <div style="display:flex; flex-direction:column;">
+              <label for="custExp">Exp (MM/YY)</label>
+              <input id="custExp" name="cc_exp" type="text" inputmode="numeric" placeholder="MM/YY" maxlength="5">
+            </div>
+            <div style="display:flex; flex-direction:column;">
+              <label for="custCvv">CVV</label>
+              <input id="custCvv" name="cc_cvv" type="text" inputmode="numeric" placeholder="123" maxlength="4">
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column;">
+            <label for="custZip">Billing ZIP</label>
+            <input id="custZip" name="cc_zip" type="text" inputmode="numeric" placeholder="00000" maxlength="5">
+          </div>
+        </fieldset>
+
+        <!-- Totals -->
+        <div class="note">
+          <div id="custFeeRow" style="display:none;">
+            <strong>Processing fee (if card):</strong> <span id="custFee">$0.00</span>
+          </div>
+          <div><strong>Total:</strong> <span id="custTotal">$0.00</span></div>
+        </div>
+
+        <button class="btn" type="submit" disabled>Continue (Coming Soon)</button>
+        <p class="muted" style="margin:6px 0 0">Submit is disabled until backend is wired. We’ll redirect to a secure Converge page later.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const form = document.getElementById('customer-pay-form');
+
+  const amountEl = document.getElementById('custAmount');
+  const feeRow  = document.getElementById('custFeeRow');
+  const feeEl   = document.getElementById('custFee');
+  const totalEl = document.getElementById('custTotal');
+
+  const achBox  = document.getElementById('custAchFields');
+  const cardBox = document.getElementById('custCardFields');
+
+  // Fields we toggle required for ACH
+  const achRequired = [
+    'custHolder','custRouting','custAchAcct','custAcctType'
+  ].map(id => document.getElementById(id));
+
+  // Fields we toggle required for Card
+  const cardRequired = [
+    'custCardName','custCardNumber','custExp','custCvv','custZip'
+  ].map(id => document.getElementById(id));
+
+  function setRequired(elems, value){
+    elems.forEach(el => { if (el) el.required = value; });
+  }
+
+  function currentMethod(){
+    const checked = form.querySelector('input[name="method"]:checked');
+    return checked ? checked.value : 'ach';
+  }
+
+  function toggleMethodUI(){
+    const method = currentMethod();
+
+    if (method === 'card'){
+      cardBox.style.display = 'block';
+      achBox.style.display  = 'none';
+      setRequired(cardRequired, true);
+      setRequired(achRequired, false);
+    } else {
+      cardBox.style.display = 'none';
+      achBox.style.display  = 'block';
+      setRequired(cardRequired, false);
+      setRequired(achRequired, true);
+    }
+    calcTotals();
+  }
+
+  function calcTotals(){
+    const raw = parseFloat(amountEl.value || '0');
+    const method = currentMethod();
+    const amount = isNaN(raw) || raw < 0 ? 0 : raw;
+    let fee = 0;
+
+    if (method === 'card'){
+      fee = +(amount * 0.035).toFixed(2);
+      feeRow.style.display = 'block';
+      feeEl.textContent = `$${fee.toFixed(2)}`;
+    } else {
+      feeRow.style.display = 'none';
+    }
+
+    const total = +(amount + fee).toFixed(2);
+    totalEl.textContent = `$${total.toFixed(2)}`;
+  }
+
+  form.addEventListener('input', (e)=>{
+    if (e.target.name === 'method'){ toggleMethodUI(); }
+    else { calcTotals(); }
+  });
+
+  // Initialize
+  toggleMethodUI();
+})();
+</script>
+{% endblock %}

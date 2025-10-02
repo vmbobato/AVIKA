@@ -1,0 +1,62 @@
+
+{% extends "base.html" %}
+{% block content %}
+  <!-- HERO -->
+  <section class="hero">
+        <div style="text-align:center;">
+          <h1>Avika Billing Solution LLC</h1>
+          <p class="tagline">We are a medical billing company, specializing in the out-of-network for healthcare providers and experts in IDR.</p>
+          <div style="margin-top:16px">
+            <a class="btn" href="/pay">Pay My Bill</a>
+            <a style="margin-left:12px" href="/#contact">Contact Us →</a>
+          </div>
+        </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="section">
+    <div class="inner">
+      <div class="card">
+        <h2>Our Services</h2>
+        <p class="muted">Claim submission, offer review, denial turnover, complete document prep, and full IDR handling with transparent reporting.</p>
+        <ul class="list">
+          <li>Full claims processing</li>
+          <li>Claim audits</li>
+          <li>Claims follow-up</li>
+          <li>Underpayments & denial appeals</li>
+          <li>Federal and state IDR "No Surprise Act" full process</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <!--
+  <section id="about" class="section">
+    <div class="inner">
+      <div class="card">
+        <h2>About Us</h2>
+        <p class="muted">Describe your team’s background, partners, and mission. Keep it concise and outcomes‑focused.</p>
+      </div>
+    </div>
+  </section>
+-->
+  <!-- CONTACT -->
+  <section id="contact" class="section">
+    <div class="inner">
+      <div class="card">
+        <h2>Contact</h2>
+        <p>We’d love to hear from you. You can email us or fill out one of our <a href="{{ url_for('contact') }}">contact forms</a>.</p>
+        <p><i class="fa-solid fa-envelope"></i> 
+          <a href="mailto:billing@avika-bs.com">billing@avika-bs.com</a></p>
+          <p><i class="fa-solid fa-phone"></i> (281)-653-2924</p>
+          <p><i class="fa-solid fa-fax"></i> (832)-688-8144</p>
+
+        <div class="hours">
+          <div><strong>Mon–Fri</strong> 9:00 AM – 3:00 PM</div>
+          <div><strong>Sat–Sun</strong> Closed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
