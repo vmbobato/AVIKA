@@ -1,0 +1,24 @@
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore AVIKA-specific folder
+.avika/
+
+# Ignore Elastic Beanstalk configs
+.elasticbeanstalk/
+
+# (optional) Ignore virtual environments
+venv/
+.env/
+
+# (optional) Ignore OS/editor junk
+.DS_Store
+Thumbs.db
