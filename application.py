@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 
 application = Flask(__name__)
 
@@ -30,6 +30,14 @@ def pay_patient():
 @application.route("/find-my-info")
 def invoice_help():
     return render_template("find_info.html", title="Find My Info")
+
+@application.post("/contact-form-content")
+def contact_form_content():
+    data = request.get_json()
+    print("=== New Contact Form Submission ===")
+    print(data)
+    print("===================================")
+    return jsonify({"ok": True, "received": data}), 200
 
 @application.errorhandler(404)
 def not_found(e):

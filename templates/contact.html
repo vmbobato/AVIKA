@@ -6,7 +6,7 @@
         <h1>Contact Us</h1>
         <p>Have a question about your bill or our services? Fill out the form below and we’ll get back to you.</p>
 
-        <form class="grid" style="gap:16px; margin-top:16px;" method="post">
+        <form id="contactForm" class="grid" style="gap:16px; margin-top:16px;" method="post">
           <div style="display:flex; flex-direction:column;">
             <label for="fullName">Full Name</label>
             <input id="fullName" name="fullName" type="text" placeholder="Jane Doe" required>
@@ -32,7 +32,82 @@
           </div>
         </form>
 
+        <!-- Status message -->
+        <div id="status" class="status" aria-live="polite"></div>
+
       </div>
     </div>
   </section>
+  <style>
+    .status {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      font-weight: 500;
+      display: none; /* hidden until used */
+    }
+    .status.show { display: block; }
+
+    .status.success {
+      background: #d1fae5; /* light green */
+      color: #065f46;      /* dark green */
+      border-color: #10b981;
+    }
+    .status.error {
+      background: #fee2e2; /* light red */
+      color: #991b1b;      /* dark red */
+      border-color: #ef4444;
+    }
+  </style>
+
+  <script>
+    (function () {
+      const form = document.getElementById("contactForm");
+      const statusBox = document.getElementById("status");
+      let dismissTimer = null;
+
+      function showStatus(message, type) {
+        // Clear previous timer
+        if (dismissTimer) clearTimeout(dismissTimer);
+
+        statusBox.textContent = message;
+        statusBox.className = "status show " + (type === "success" ? "success" : "error");
+
+        // Auto-dismiss after 5s
+        dismissTimer = setTimeout(() => {
+          statusBox.textContent = "";
+          statusBox.className = "status";
+        }, 5000);
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const payload = Object.fromEntries(formData.entries());
+
+        try {
+          const res = await fetch("/contact-form-content", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await res.json().catch(() => ({}));
+
+          if (res.ok && data.ok) {
+            showStatus(data.message || "Your message has been sent!", "success");
+            form.reset();
+          } else {
+            const msg = (data && data.message) || `Something went wrong (HTTP ${res.status}).`;
+            showStatus(msg, "error");
+          }
+        } catch (err) {
+          console.error(err);
+          showStatus("Network error. Please try again.", "error");
+        }
+      });
+    })();
+  </script>
 {% endblock %}
