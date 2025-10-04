@@ -2,140 +2,236 @@
 {% block content %}
 <section class="section">
   <div class="inner">
-    <div class="card">
-      <h1>Client Payment</h1>
-      <p class="muted">Use your Invoice Number, Name, and Practice Name to start your payment.</p>
-      <p class="muted">To find your invoice number <a href="/find-my-info">click here</a>.</p>
-
-      <form id="customer-pay-form" class="grid" style="gap:16px; margin-top:16px;" method="post" action="#">
-        <!-- Core payer fields -->
-        <div style="display:flex; flex-direction:column;">
-          <label for="invNumber">Invoice Number</label>
-          <input id="invNumber" name="invoiceNumber" type="text" placeholder="e.g., 3612" required>
+    <div class="card pay-card">
+      <header class="pay-head">
+        <div>
+          <h1>Client Payment</h1>
+          <p class="muted">Use your Invoice Number, Name, and Practice Name to start your payment.
+            <br>Need help finding your invoice number? <a href="/find-my-info">Click here</a>.
+          </p>
         </div>
+      </header>
 
-        <div style="display:flex; flex-direction:column;">
-          <label for="custName">Full Name</label>
-          <input id="custName" name="fullName" type="text" placeholder="Jane Doe" required>
-        </div>
+      <div class="pay-layout">
+        <!-- FORM -->
+        <form id="customer-pay-form" class="pay-form" method="post" action="#">
+          <!-- Payer details -->
+          <div class="field">
+            <label for="invNumber">Invoice Number <span class="req" aria-hidden="true">*</span></label>
+            <input id="invNumber" name="invoiceNumber" type="text" placeholder="e.g., 3612" required>
+          </div>
 
-        <div style="display:flex; flex-direction:column;">
-          <label for="custPractice">Practice Name</label>
-          <input id="custPractice" name="practiceName" type="text" placeholder="Avika Practice" required>
-        </div>
+          <div class="field">
+            <label for="custName">Full Name <span class="req" aria-hidden="true">*</span></label>
+            <input id="custName" name="fullName" type="text" placeholder="Jane Doe" required>
+          </div>
 
-        <div style="display:flex; flex-direction:column;">
-          <label for="custAmount">Amount (USD)</label>
-          <input id="custAmount" name="amount" type="number" step="0.01" min="0" placeholder="125.00" required>
-        </div>
+          <div class="field">
+            <label for="custPractice">Practice Name <span class="req" aria-hidden="true">*</span></label>
+            <input id="custPractice" name="practiceName" type="text" placeholder="Avika Practice" required>
+          </div>
 
-        <!-- Payment method -->
-        <div style="display:flex; flex-direction:column; gap:8px; margin-top:6px;">
-          <label>Payment Method</label>
-          <div>
-            <label style="display:inline-flex; align-items:center; gap:8px; margin-right:18px;">
-              <input type="radio" name="method" value="ach" checked>
-              ACH (no fee)
-            </label>
-            <label style="display:inline-flex; align-items:center; gap:8px;">
-              <input type="radio" name="method" value="card">
-              Credit Card (+3.5% fee)
-            </label>
+          <div class="field">
+            <label for="custAmount">Amount (USD) <span class="req" aria-hidden="true">*</span></label>
+            <input id="custAmount" name="amount" type="number" step="0.01" min="0" placeholder="125.00" required>
+            <small class="hint">Enter the invoice total before any card fee.</small>
           </div>
-        </div>
 
-        <!-- ACH fields -->
-        <fieldset id="custAchFields" class="grid" style="gap:12px; padding:12px; border:1px solid rgba(255,255,255,.15); border-radius:12px;">
-          <legend>ACH Details</legend>
-          <div style="display:flex; flex-direction:column;">
-            <label for="custHolder">Account Holder Name</label>
-            <input id="custHolder" name="ach_account_holder" type="text" placeholder="Jane Doe">
-          </div>
-          <div style="display:flex; flex-direction:column;">
-            <label for="custRouting">Routing Number</label>
-            <input id="custRouting" name="ach_routing" type="text" inputmode="numeric" placeholder="XXXXXXXXX" maxlength="9">
-          </div>
-          <div style="display:flex; flex-direction:column;">
-            <label for="custAchAcct">Account Number</label>
-            <input id="custAchAcct" name="ach_account" type="text" inputmode="numeric" placeholder="XXXXXXXXXXXX">
-          </div>
-          <div style="display:flex; flex-direction:column;">
-            <label for="custAcctType">Account Type</label>
-            <select id="custAcctType" name="ach_account_type">
-              <option value="">Select</option>
-              <option value="checking">Checking</option>
-              <option value="savings">Savings</option>
-            </select>
-          </div>
-        </fieldset>
-
-        <!-- Card fields -->
-        <fieldset id="custCardFields" class="grid" style="gap:12px; padding:12px; border:1px solid rgba(255,255,255,.15); border-radius:12px; display:none;">
-          <legend>Card Details</legend>
-          <div style="display:flex; flex-direction:column;">
-            <label for="custCardName">Name on Card</label>
-            <input id="custCardName" name="cc_name" type="text" placeholder="Jane Doe">
-          </div>
-          <div style="display:flex; flex-direction:column;">
-            <label for="custCardNumber">Card Number</label>
-            <input id="custCardNumber" name="cc_number" type="text" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="19">
-          </div>
-          <div class="row row-2">
-            <div style="display:flex; flex-direction:column;">
-              <label for="custExp">Exp (MM/YY)</label>
-              <input id="custExp" name="cc_exp" type="text" inputmode="numeric" placeholder="MM/YY" maxlength="5">
+          <!-- Method -->
+          <fieldset class="field field-span-2">
+            <legend>Payment Method</legend>
+            <div class="radio-row">
+              <label class="radio">
+                <input type="radio" name="method" value="ach" checked>
+                <span>ACH (no fee)</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="method" value="card">
+                <span>Credit Card (+3.5% fee)</span>
+              </label>
             </div>
-            <div style="display:flex; flex-direction:column;">
-              <label for="custCvv">CVV</label>
-              <input id="custCvv" name="cc_cvv" type="text" inputmode="numeric" placeholder="123" maxlength="4">
+          </fieldset>
+
+          <!-- ACH -->
+          <fieldset id="custAchFields" class="field field-span-2">
+            <legend>ACH Details</legend>
+            <div class="ach-grid">
+              <div class="field">
+                <label for="custHolder">Account Holder Name</label>
+                <input id="custHolder" name="ach_account_holder" type="text" placeholder="Jane Doe">
+              </div>
+              <div class="field">
+                <label for="custRouting">Routing Number</label>
+                <input id="custRouting" name="ach_routing" type="text" inputmode="numeric" placeholder="XXXXXXXXX" maxlength="9">
+              </div>
+              <div class="field">
+                <label for="custAchAcct">Account Number</label>
+                <input id="custAchAcct" name="ach_account" type="text" inputmode="numeric" placeholder="XXXXXXXXXXXX">
+              </div>
+              <div class="field">
+                <label for="custAcctType">Account Type</label>
+                <select id="custAcctType" name="ach_account_type">
+                  <option value="">Select</option>
+                  <option value="checking">Checking</option>
+                  <option value="savings">Savings</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div style="display:flex; flex-direction:column;">
-            <label for="custZip">Billing ZIP</label>
-            <input id="custZip" name="cc_zip" type="text" inputmode="numeric" placeholder="00000" maxlength="5">
-          </div>
-        </fieldset>
+          </fieldset>
 
-        <!-- Totals -->
-        <div class="note">
-          <div id="custFeeRow" style="display:none;">
-            <strong>Processing fee (if card):</strong> <span id="custFee">$0.00</span>
-          </div>
-          <div><strong>Total:</strong> <span id="custTotal">$0.00</span></div>
-        </div>
+          <!-- Consent -->
+          <fieldset id="consentBlock" class="field field-span-2">
+            <legend>Authorization & Consent</legend>
+            <div class="consent-box">
+              <p id="authText">
+                By checking the box below and clicking Continue, you authorize <strong>Avika</strong> to initiate an
+                Automated Clearing House (ACH) debit from the bank account you provide, in the amount shown, for payment
+                of your invoice. You certify that you are an authorized signer on this account. This authorization is for
+                a one-time payment unless you separately agree to recurring payments. You may revoke this authorization by
+                contacting Avika at least 3 business days before the scheduled debit. All payments are subject to bank
+                rules and NACHA operating rules.
+              </p>
+            </div>
+            <label class="check">
+              <input id="consentAch" name="consent_ach" type="checkbox" value="yes">
+              <span>I agree to the Authorization & Consent above and confirm the information provided is accurate.</span>
+            </label>
+            <input type="hidden" id="consentVersion" name="consent_version" value="ach_web_v1.0">
+            <input type="hidden" id="consentSnapshot" name="consent_snapshot" value="">
+          </fieldset>
 
-        <button class="btn" type="submit" disabled>Continue (Coming Soon)</button>
-        <p class="muted" style="margin:6px 0 0">Submit is disabled until backend is wired.</p>
-      </form>
+          <!-- Mobile submit (desktop submit sits in Summary card) -->
+          <div class="submit-mobile field-span-2">
+            <button class="btn" id="submitBtn" type="submit">Continue</button>
+          </div>
+        </form>
+
+        <!-- SUMMARY -->
+        <aside class="pay-summary">
+          <div class="summary-card">
+            <h3>Summary</h3>
+            <dl>
+              <div class="row">
+                <dt>Amount</dt>
+                <dd id="sumAmount">$0.00</dd>
+              </div>
+              <div class="row" id="custFeeRow" style="display:none;">
+                <dt>Processing fee</dt>
+                <dd id="custFee">$0.00</dd>
+              </div>
+              <div class="row total">
+                <dt>Total</dt>
+                <dd id="custTotal">$0.00</dd>
+              </div>
+            </dl>
+            <button class="btn btn-block" id="submitBtnDesk" type="button">Continue</button>
+            <p class="tiny muted">
+              For ACH, you must agree to the authorization above.
+            </p>
+          </div>
+        </aside>
+      </div>
     </div>
   </div>
 </section>
 
+<style>
+  /* Layout */
+  .pay-card{ padding:28px }
+  .pay-head{ margin-bottom:10px }
+  .pay-layout{
+    display:grid; grid-template-columns: 1.2fr .8fr; gap:22px; align-items:start;
+  }
+  @media (max-width: 980px){
+    .pay-layout{ grid-template-columns: 1fr; }
+  }
+
+  /* Form grid */
+  .pay-form{
+    display:grid; grid-template-columns: 1fr 1fr; gap:14px;
+  }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field-span-2{ grid-column: 1 / -1; }
+  label{ font-weight:600 }
+  .req{ color: var(--accent); }
+
+  .radio-row{ display:flex; gap:16px; flex-wrap:wrap; }
+  .radio{ display:inline-flex; align-items:center; gap:8px; }
+
+  .ach-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width: 720px){ .pay-form{ grid-template-columns: 1fr; } .ach-grid{ grid-template-columns: 1fr; } }
+
+  .hint{ color: var(--muted); font-size:.9rem; margin-top:-2px; }
+
+  /* Consent box */
+  .consent-box{
+    background: color-mix(in oklab, var(--section), white 60%);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:12px;
+    max-height:180px; overflow:auto;
+  }
+  .check{ display:flex; align-items:flex-start; gap:10px; margin-top:6px; }
+
+  /* Summary */
+  .pay-summary{ position:sticky; top:90px; }
+  .summary-card{
+    background: var(--card); border:1px solid var(--border);
+    border-radius:16px; padding:18px; box-shadow: var(--shadow);
+  }
+  .summary-card h3{ margin:0 0 10px 0; font-size:1.15rem }
+  .summary-card dl{ margin:0; }
+  .summary-card .row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 0; border-bottom:1px dashed var(--border);
+  }
+  .summary-card .row:last-child{ border-bottom:none; }
+  .summary-card .total dt{ font-weight:800; }
+  .summary-card .total dd{ font-weight:800; }
+  .btn-block{ width:100%; margin-top:10px; }
+
+  /* Mobile submit: hidden on desktop (we use Summary button) */
+  .submit-mobile{ display:none; }
+  @media (max-width: 980px){
+    .submit-mobile{ display:block; }
+    #submitBtnDesk{ display:none; }
+  }
+
+  /* Inputs + selects */
+  input, select, textarea{
+    background: var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 12px;
+    font: inherit;
+    outline:none;
+  }
+  input:focus, select:focus, textarea:focus{ box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), white 80%); border-color: var(--accent); }
+</style>
+
 <script>
 (function(){
-  const form = document.getElementById('customer-pay-form');
+  const form      = document.getElementById('customer-pay-form');
+  const achBox    = document.getElementById('custAchFields');     // required for ACH flow
+  const consentBx = document.getElementById('consentBlock');       // required for ACH flow
+  const consentCb = document.getElementById('consentAch');         // required for ACH flow
+  const amountEl  = document.getElementById('custAmount');
+  const feeRow    = document.getElementById('custFeeRow');
+  const feeEl     = document.getElementById('custFee');
+  const totalEl   = document.getElementById('custTotal');
+  const sumAmount = document.getElementById('sumAmount');
 
-  const amountEl = document.getElementById('custAmount');
-  const feeRow  = document.getElementById('custFeeRow');
-  const feeEl   = document.getElementById('custFee');
-  const totalEl = document.getElementById('custTotal');
+  // These may NOT exist if you removed card inputs — that's fine.
+  const cardBox   = document.getElementById('custCardFields');
+  const cardRequired = ['custCardName','custCardNumber','custExp','custCvv','custZip']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
 
-  const achBox  = document.getElementById('custAchFields');
-  const cardBox = document.getElementById('custCardFields');
+  const achRequired  = ['custHolder','custRouting','custAchAcct','custAcctType']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
 
-  // Fields we toggle required for ACH
-  const achRequired = [
-    'custHolder','custRouting','custAchAcct','custAcctType'
-  ].map(id => document.getElementById(id));
-
-  // Fields we toggle required for Card
-  const cardRequired = [
-    'custCardName','custCardNumber','custExp','custCvv','custZip'
-  ].map(id => document.getElementById(id));
-
-  function setRequired(elems, value){
-    elems.forEach(el => { if (el) el.required = value; });
-  }
+  function setRequired(elems, value){ elems.forEach(el => el.required = value); }
 
   function currentMethod(){
     const checked = form.querySelector('input[name="method"]:checked');
@@ -146,43 +242,80 @@
     const method = currentMethod();
 
     if (method === 'card'){
-      cardBox.style.display = 'block';
-      achBox.style.display  = 'none';
-      setRequired(cardRequired, true);
+      // Hide ACH UI + consent; no local card fields (HPP will collect)
+      if (achBox)    achBox.style.display = 'none';
+      if (consentBx) consentBx.style.display = 'none';
+      if (cardBox)   cardBox.style.display = 'none';  // keep hidden if it exists
+
       setRequired(achRequired, false);
-    } else {
-      cardBox.style.display = 'none';
-      achBox.style.display  = 'block';
       setRequired(cardRequired, false);
+      if (consentCb) consentCb.required = false;
+    } else {
+      // Show ACH UI + consent
+      if (achBox)    achBox.style.display = 'block';
+      if (consentBx) consentBx.style.display = 'block';
+      if (cardBox)   cardBox.style.display = 'none';
+
       setRequired(achRequired, true);
+      setRequired(cardRequired, false);
+      if (consentCb) consentCb.required = true;
     }
+
     calcTotals();
   }
 
-  function calcTotals(){
-    const raw = parseFloat(amountEl.value || '0');
-    const method = currentMethod();
-    const amount = isNaN(raw) || raw < 0 ? 0 : raw;
-    let fee = 0;
-
-    if (method === 'card'){
-      fee = +(amount * 0.035).toFixed(2);
-      feeRow.style.display = 'block';
-      feeEl.textContent = `$${fee.toFixed(2)}`;
-    } else {
-      feeRow.style.display = 'none';
-    }
-
-    const total = +(amount + fee).toFixed(2);
-    totalEl.textContent = `$${total.toFixed(2)}`;
+  function formatMoney(n){
+    const v = isNaN(n) ? 0 : Number(n);
+    return `$${v.toFixed(2)}`;
   }
 
-  form.addEventListener('input', (e)=>{
-    if (e.target.name === 'method'){ toggleMethodUI(); }
-    else { calcTotals(); }
+  function calcTotals(){
+    const raw    = parseFloat(amountEl.value || '0');
+    const method = currentMethod();
+    const amount = isNaN(raw) || raw < 0 ? 0 : raw;
+
+    const fee = method === 'card' ? +(amount * 0.035).toFixed(2) : 0;
+    if (feeRow) feeRow.style.display = (method === 'card') ? 'flex' : 'none';
+    if (feeEl)  feeEl.textContent = formatMoney(fee);
+
+    const total = +(amount + fee).toFixed(2);
+    if (totalEl) totalEl.textContent = formatMoney(total);
+    if (sumAmount) sumAmount.textContent = formatMoney(amount);
+  }
+
+  // Allow desktop "Continue" in summary to submit the same form
+  const submitDesk = document.getElementById('submitBtnDesk');
+  if (submitDesk){
+    submitDesk.addEventListener('click', ()=> {
+      form.requestSubmit ? form.requestSubmit() : form.submit();
+    });
+  }
+
+  // Dynamic endpoint selection
+  form.addEventListener('submit', function(e){
+    const method = currentMethod();
+
+    if (method === 'ach'){
+      if (consentCb && !consentCb.checked){
+        e.preventDefault();
+        alert('Please agree to the ACH Authorization & Consent before continuing.');
+        return;
+      }
+      this.action = "{{ url_for('pay_customer') }}"; // your ACH POST handler
+      this.method = "post";
+    } else {
+      this.action = "{{ url_for('card_temp') }}";     // /card-temp (placeholder)
+      this.method = "post";
+    }
   });
 
-  // Initialize
+  // Recalc totals on input
+  form.addEventListener('input', (e)=>{
+    if (e.target.name === 'method') toggleMethodUI();
+    else calcTotals();
+  });
+
+  // Init
   toggleMethodUI();
 })();
 </script>

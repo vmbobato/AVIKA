@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section">
+  <div class="inner">
+    <div class="card">
+      <h1>Payment details received!</h1>
+      <p class="muted">Thank you! Authorization stored for invoice {{ invoice }}.</p>
+      <p class="muted">Account ending in {{ last4 }} · Amount ${{ amount }}</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+3

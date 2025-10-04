@@ -1,26 +1,86 @@
-
 {% extends "base.html" %}
 {% block content %}
+
   <!-- HERO -->
-  <section class="hero">
-        <div style="text-align:center;">
-          <h1>Avika Billing Solutions, LLC</h1>
-          <h2>Smart Billing Solutions. Innovation in Every Claim</h2>
-          <p class="tagline">We are a medical billing company that specializes in out-of-network billing and we are experts in State and Federal "Independent Dispute Resolution”.</p>
-          <div style="margin-top:16px">
-            <a class="btn" href="/pay">Pay My Bill</a>
-            <a style="margin-left:12px" href="/#contact">Contact Us →</a>
-          </div>
-        </div>
+  <section class="hero-enhanced">
+    <div class="hero-inner">
+      <span class="eyebrow">Medical Billing • IDR Experts</span>
+      <h1>Avika Billing Solutions, LLC</h1>
+      <h2>Smart Billing Solutions. Innovation in Every Claim.</h2>
+      <p class="tagline">
+        We specialize in out-of-network billing and are experts in State & Federal
+        "Independent Dispute Resolution."
+      </p>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/pay">
+          <i class="fa-solid fa-credit-card"></i> Pay My Bill
+        </a>
+        <a class="btn btn-ghost" href="/#contact">
+          Contact Us <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <div class="trust-strip">
+        <span><i class="fa-solid fa-lock"></i> HIPAA Compliant</span>
+        <span><i class="fa-solid fa-scale-balanced"></i> State & Federal IDR</span>
+        <span><i class="fa-solid fa-chart-line"></i> Transparent Reporting</span>
+      </div>
+    </div>
+
+    <svg class="hero-wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,64 C240,120 480,0 720,32 C960,64 1200,112 1440,64 L1440,120 L0,120 Z" fill="var(--bg)"></path>
+    </svg>
   </section>
 
   <!-- SERVICES -->
   <section id="services" class="section">
     <div class="inner">
-      <div class="card">
-        <h2>Our Services</h2>
-        <p class="muted">Claim submission, offer review, denial turnover, complete document prep, and full IDR handling with transparent reporting.</p>
-        <ul class="list">
+      <div class="stack">
+        <div class="section-head">
+          <h2>Our Services</h2>
+          <p class="muted">Claim submission, offer review, denial turnover, complete document prep, and full IDR handling with transparent reporting.</p>
+        </div>
+
+        <div class="services-grid">
+          <div class="service-card">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <h3>Full Claims Processing</h3>
+            <p class="muted">End-to-end submission & tracking.</p>
+          </div>
+
+          <div class="service-card">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>
+            <h3>Claim Audits</h3>
+            <p class="muted">Identify underpayments & errors.</p>
+          </div>
+
+          <div class="service-card">
+            <i class="fa-solid fa-phone-volume"></i>
+            <h3>Claims Follow-Up</h3>
+            <p class="muted">Proactive payer outreach.</p>
+          </div>
+
+          <div class="service-card">
+            <i class="fa-solid fa-rotate-left"></i>
+            <h3>Appeals</h3>
+            <p class="muted">Underpayments & denial appeals.</p>
+          </div>
+
+          <div class="service-card">
+            <i class="fa-solid fa-scale-balanced"></i>
+            <h3>State & Federal IDR</h3>
+            <p class="muted">"No Surprises Act" full process.</p>
+          </div>
+
+          <div class="service-card">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h3>HIPAA Compliant</h3>
+            <p class="muted">Security built into every step.</p>
+          </div>
+        </div>
+
+        <ul class="list sr-only">
           <li>Full claims processing</li>
           <li>Claim audits</li>
           <li>Claims follow-up</li>
@@ -32,33 +92,62 @@
     </div>
   </section>
 
-  <!-- ABOUT -->
-  <!--
-  <section id="about" class="section">
-    <div class="inner">
-      <div class="card">
-        <h2>About Us</h2>
-        <p class="muted">Describe your team’s background, partners, and mission. Keep it concise and outcomes‑focused.</p>
-      </div>
-    </div>
-  </section>
--->
   <!-- CONTACT -->
   <section id="contact" class="section">
     <div class="inner">
-      <div class="card">
-        <h2>Contact</h2>
-        <p>We’d love to hear from you. You can email us or fill out one of our <a href="{{ url_for('contact') }}">contact forms</a>.</p>
-        <p><i class="fa-solid fa-envelope"></i> 
-          <a href="mailto:billing@avika-bs.com">billing@avika-bs.com</a></p>
-          <p><i class="fa-solid fa-phone"></i> (281)-653-2924</p>
-          <p><i class="fa-solid fa-fax"></i> (832)-688-8144</p>
+      <div class="card contact-card">
+        <div class="section-head">
+          <h2>Contact</h2>
+          <p class="muted">We’d love to hear from you. Email us or use our
+            <a href="{{ url_for('contact') }}">contact form</a>.
+          </p>
+        </div>
 
-        <div class="hours">
-          <div><strong>Mon–Fri</strong> 9:00 AM – 3:00 PM</div>
-          <div><strong>Sat–Sun</strong> Closed</div>
+        <div class="contact-grid">
+          <div class="contact-item">
+            <i class="fa-solid fa-envelope"></i>
+            <div>
+              <div class="label">Email</div>
+              <a href="mailto:billing@avika-bs.com">billing@avika-bs.com</a>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <i class="fa-solid fa-phone"></i>
+            <div>
+              <div class="label">Phone</div>
+              <a href="tel:12816532924">(281) 653-2924</a>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <i class="fa-solid fa-fax"></i>
+            <div>
+              <div class="label">Fax</div>
+              <span>(832) 688-8144</span>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <i class="fa-solid fa-clock"></i>
+            <div>
+              <div class="label">Hours</div>
+              <div class="hours hours-compact">
+                <div><strong>Mon–Fri</strong></div>
+                <div>9:00 AM – 3:00 PM</div>
+                <div><strong>Sat–Sun</strong></div>
+                <div>Closed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-cta">
+          <a class="btn" href="/pay"><i class="fa-solid fa-credit-card"></i> Make a Payment</a>
+          <a class="btn" href="{{ url_for('contact') }}"><i class="fa-solid fa-paper-plane"></i> Send a Message</a>
         </div>
       </div>
     </div>
   </section>
+
 {% endblock %}

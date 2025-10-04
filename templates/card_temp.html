@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section">
+  <div class="inner">
+    <div class="card">
+      <h1>Card Payment (Preview)</h1>
+      <p class="muted">This is a temporary page. Next we’ll redirect to Converge’s Hosted Payment Page.</p>
+
+      <div class="note" style="margin-top:10px">
+        <p><strong>Invoice:</strong> {{ info.invoice or '—' }}</p>
+        <p><strong>Name:</strong> {{ info.name or '—' }}</p>
+        <p><strong>Practice:</strong> {{ info.practice or '—' }}</p>
+        <p><strong>Amount:</strong> ${{ info.amount }}</p>
+        <p><strong>Card Fee (3.5%):</strong> ${{ fee }}</p>
+        <p><strong>Total:</strong> ${{ total }}</p>
+      </div>
+
+      <div style="margin-top:14px">
+        <a class="btn" href="{{ url_for('pay_customer') }}">Back</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

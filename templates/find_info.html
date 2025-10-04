@@ -1,120 +1,122 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="section">
+<section class="section page-findinfo">
   <div class="inner">
-    <div class="card">
-      <h1>Find Your Information</h1>
-      <p class="muted">Use this guide to locate your <strong>Account Number</strong> and <strong>Invoice Number</strong> so you can complete your payment quickly.</p>
 
-      <!-- Quick Links -->
-      <div class="grid" style="gap:12px; margin-top:16px;">
-        <a class="btn" href="/pay">Ready to pay?</a>
-        <a style="margin-left:8px" href="{{ url_for('contact') }}">Need help? Contact us →</a>
+    <!-- Header -->
+    <div class="card" style="padding:28px">
+      <div class="fi-eyebrow">Billing Help</div>
+      <h1 class="fi-h1">Find Your Information</h1>
+      <p class="fi-lead muted">
+        Locate your <strong>Account Number</strong> and <strong>Invoice Number</strong> so you can complete your payment quickly.
+      </p>
+
+      <div class="fi-actions">
+        <a class="btn" href="/pay"><i class="fa-solid fa-credit-card"></i> Ready to pay?</a>
+        <a class="btn btn-ghost" href="{{ url_for('contact') }}"><i class="fa-solid fa-circle-question"></i> Need help? Contact us</a>
+      </div>
+    </div>
+
+    <!-- Steps (no right rail, no quick-check) -->
+    <div class="fi-stack" style="margin-top:16px">
+
+      <div class="card fi-step">
+        <h2 class="fi-h2">Where to find your Invoice Number</h2>
+        <ul class="fi-checklist">
+          <li>
+            <i class="fa-regular fa-file-lines"></i>
+            <div>
+              <strong>On your statement:</strong>
+              <span>Bottom-right in the <em>“Invoice Details”</em> box.</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-phone"></i>
+            <div>
+              <strong>By phone:</strong>
+              <span>Call us — we’ll verify your identity and provide it.</span>
+            </div>
+          </li>
+        </ul>
       </div>
 
-      <!-- Account Number -->
-      <div class="section">
-        <h2>Where to find your Invoice Number</h2>
-        <ul class="list">
-          <li><strong>On your invoice:</strong> Look in the middle of the page for <em>"If paying by credit/debit card"</em>, your Account Number is listed below <em>"Patient Account #"</em>.</li>
-          <li><strong>By phone:</strong> Call us and we’ll verify your identity and provide it.</li>
+      <div class="card fi-step">
+        <h2 class="fi-h2">Where to find your Account Number</h2>
+        <ul class="fi-checklist">
+          <li>
+            <i class="fa-regular fa-file"></i>
+            <div>
+              <strong>On your invoice:</strong>
+              <span>Look near <em>“Patient Account #”</em> (often mid-page under the payment box).</span>
+            </div>
+          </li>
+          <li>
+            <i class="fa-solid fa-phone"></i>
+            <div>
+              <strong>By phone:</strong>
+              <span>We can confirm after identity verification.</span>
+            </div>
+          </li>
         </ul>
-        <h2>Where to find your Account Number</h2>
-        <ul class="list">
-          <li><strong>On your statement:</strong> Look in the bottom right corner for <em>“Invoice Details”</em>.</li>
-          <li><strong>By phone:</strong> Call us and we’ll verify your identity and provide it.</li>
-        </ul>
-        <!-- Placeholder for sample statement image -->
-        <div class="card" style="margin-top:12px">
-          <strong>(Placeholder)</strong>
-          <p class="muted">Replace this box with a screenshot or PDF snippet highlighting the Account # field.</p>
+
+        <!-- Replace with a real screenshot later -->
+        <div class="fi-media">
+          <div class="fi-media-thumb fi-skeleton" aria-hidden="true"></div>
+          <div>
+            <strong>Example statement</strong>
+            <p class="muted">Swap this placeholder with a screenshot highlighting the <em>Patient Account #</em> and <em>Invoice Details</em>.</p>
+          </div>
         </div>
       </div>
 
-      <!-- Practice Name -->
-      <div class="section">
-        <h2>Where to find your Practice Name</h2>
-        <ul class="list">
-          <li><strong>On your statement header</strong>.</li>
+      <div class="card fi-step">
+        <h2 class="fi-h2">Where to find your Practice Name</h2>
+        <ul class="fi-list">
+          <li><strong>Statement header</strong> (top of the page).</li>
           <li><strong>Appointment reminders</strong> or <strong>visit summaries</strong>.</li>
-          <li><strong>Clinic signage</strong> or <strong>website</strong> from your last visit.</li>
+          <li><strong>Clinic signage/website</strong> from your last visit.</li>
         </ul>
-        <div class="note" style="margin-top:10px">
-          If you saw more than one provider, list the clinic/department name printed on your statement.
+        <div class="fi-note">
+          If you saw more than one provider, use the clinic/department name printed on your statement.
         </div>
       </div>
 
-      <!-- Full Name -->
-      <div class="section">
-        <h2>Use your Legal Name</h2>
+      <div class="card fi-step">
+        <h2 class="fi-h2">Use your Legal Name</h2>
         <p class="muted">
           Enter your name exactly as it appears on your statement (first, middle initial if listed, last).
           If a parent/guardian is the account holder, use the account holder’s name.
         </p>
       </div>
 
-      <!-- FAQs -->
-      <div class="section">
-        <h2>Frequently Asked Questions</h2>
-        <div class="card" style="margin-top:10px">
-          <p><strong>What if I can’t find my Account Number?</strong><br>
-             Email <a href="mailto:billing@avika-bs.com">billing@avika-bs.com</a> or call us at (281)-653-2924. We’ll verify your identity and help.</p>
-          <p><strong>What if my name changed?</strong><br>
-             Use the name printed on your latest statement or call us to update your account.</p>
-          <p><strong>Practice Name is unclear.</strong><br>
-             Use the clinic name on your statement. If you visited multiple locations, pick the one tied to the specific invoice.</p>
-        </div>
+      <div class="card fi-faq">
+        <h2 class="fi-h2">Frequently Asked Questions</h2>
+        <details>
+          <summary>What if I can’t find my Account Number?</summary>
+          <p>Email <a href="mailto:billing@avika-bs.com">billing@avika-bs.com</a> or call (281) 653-2924. We’ll verify your identity and help.</p>
+        </details>
+        <details>
+          <summary>What if my name changed?</summary>
+          <p>Use the name printed on your latest statement or call us to update your account.</p>
+        </details>
+        <details>
+          <summary>Practice Name is unclear</summary>
+          <p>Use the clinic name on your statement. If you visited multiple locations, choose the one tied to the specific invoice.</p>
+        </details>
       </div>
 
-      <!-- Help CTA -->
-      <div class="section">
-        <div class="card">
-          <h3>Still can’t find it?</h3>
-          <p>We’re happy to help. Reach out:</p>
-          <p><i class="fa-solid fa-envelope"></i> <a href="mailto:billing@avika-bs.com">billing@avika-bs.com</a></p>
-          <p><i class="fa-solid fa-phone"></i> (281)-653-2924</p>
-          <div style="margin-top:10px">
-            <a class="btn" href="{{ url_for('contact') }}">Open Contact Form</a>
-          </div>
+      <!-- Help card (no left border) -->
+      <div class="card fi-help">
+        <h3 class="fi-h3">Still can’t find it?</h3>
+        <p>We’re happy to help.</p>
+        <p><i class="fa-solid fa-envelope"></i> <a href="mailto:billing@avika-bs.com">billing@avika-bs.com</a></p>
+        <p><i class="fa-solid fa-phone"></i> (281) 653-2924</p>
+        <div class="fi-actions">
+          <a class="btn" href="{{ url_for('contact') }}"><i class="fa-regular fa-message"></i> Open Contact Form</a>
         </div>
       </div>
 
     </div>
   </div>
 </section>
-
-<script>
-(function(){
-  const btn = document.getElementById('checkBtn');
-  const result = document.getElementById('checkResult');
-  const acct = document.getElementById('checkAccount');
-  const name = document.getElementById('checkName');
-  const prac = document.getElementById('checkPractice');
-
-  function padAccount(a){
-    // Example: left-pad to 7 digits (adjust to your policy)
-    const s = (a || '').replace(/\\D/g,'');
-    return s ? s.padStart(7,'0') : '';
-  }
-
-  btn.addEventListener('click', () => {
-    const a = padAccount(acct.value);
-    const n = (name.value || '').trim();
-    const p = (prac.value || '').trim();
-
-    let msgs = [];
-    if (!a) msgs.push("• Account Number looks empty or invalid. Try digits only (e.g., 0012345).");
-    if (!n) msgs.push("• Please add your full name (as on your statement).");
-    if (!p) msgs.push("• Please add your practice name (as on your statement).");
-
-    if (msgs.length){
-      result.style.display = 'block';
-      result.innerHTML = "<strong>Fix these:</strong><br>" + msgs.join("<br>");
-    } else {
-      result.style.display = 'block';
-      result.innerHTML = "<strong>Looks good!</strong><br>Account: <code>"+a+"</code><br>Name: "+n+"<br>Practice: "+p;
-    }
-  });
-})();
-</script>
 {% endblock %}

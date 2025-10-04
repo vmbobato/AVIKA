@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section" style="display:flex; justify-content:center; align-items:center; min-height:80vh;">
+  <div class="card" style="padding:32px; max-width:400px; width:100%;">
+    <h1 style="text-align:center; margin-bottom:20px;">Admin Login</h1>
+
+    {% if error %}
+      <p style="color:#dc2626; text-align:center; margin-bottom:16px;">{{ error }}</p>
+    {% endif %}
+
+    <form method="post" action="/login" style="display:flex; flex-direction:column; gap:16px;">
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <label for="u" style="font-weight:600;">Username</label>
+        <input id="u" name="username" type="text" required
+          style="padding:10px; border:1px solid var(--border); border-radius:8px; outline:none; transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='var(--accent)'">
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <label for="p" style="font-weight:600;">Password</label>
+        <input id="p" name="password" type="password" required
+          style="padding:10px; border:1px solid var(--border); border-radius:8px; outline:none; transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='var(--accent)'">
+      </div>
+
+      <button class="btn" type="submit">Sign In</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

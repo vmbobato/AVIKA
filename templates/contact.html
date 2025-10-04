@@ -1,113 +1,298 @@
 {% extends "base.html" %}
 {% block content %}
-  <section class="section">
-    <div class="inner">
-      <div class="card">
-        <h1>Contact Us</h1>
-        <p>Have a question about your bill or our services? Fill out the form below and we’ll get back to you.</p>
+<section class="section">
+  <div class="inner">
+    <div class="card contact-card">
+      <header class="contact-header">
+        <div class="title-wrap">
+          <i class="fa-solid fa-paper-plane-top"></i>
+          <h1>Contact Us</h1>
+        </div>
+        <p class="muted">
+          Have a question about your bill or our services? Fill out the form below and we’ll get back to you.
+        </p>
+      </header>
 
-        <form id="contactForm" class="grid" style="gap:16px; margin-top:16px;" method="post">
-          <div style="display:flex; flex-direction:column;">
-            <label for="fullName">Full Name</label>
+      <form id="contactForm" class="contact-grid" method="post" novalidate>
+        <!-- Full Name -->
+        <div class="field">
+          <label for="fullName">Full Name <span aria-hidden="true" class="req">*</span></label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-user"></i>
             <input id="fullName" name="fullName" type="text" placeholder="Jane Doe" required>
           </div>
+          <small class="hint">Your legal or preferred name.</small>
+        </div>
 
-          <div style="display:flex; flex-direction:column;">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" placeholder="jane@example.com" required>
+        <!-- Email -->
+        <div class="field">
+          <label for="email">Email <span aria-hidden="true" class="req">*</span></label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-envelope"></i>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="jane@email.com"
+              required
+              pattern="^[a-zA-Z0-9._%+-]+@email\.com$"
+              title="Email must end with @email.com"
+            >
           </div>
+          <small class="hint">Use your @email.com address (required).</small>
+        </div>
 
-          <div style="display:flex; flex-direction:column;">
-            <label for="phone">Phone</label>
-            <input id="phone" name="phone" type="tel" placeholder="(555) 555-5555">
+        <!-- Phone -->
+        <div class="field">
+          <label for="phone">Phone</label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-phone"></i>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              placeholder="555-555-5555"
+              pattern="^\d{3}-\d{3}-\d{4}$"
+              title="Format: 555-555-5555"
+              inputmode="numeric"
+            >
           </div>
+          <small class="hint">Format: 555-555-5555</small>
+        </div>
 
-          <div style="display:flex; flex-direction:column;">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" placeholder="How can we help?" required></textarea>
+        <!-- Message -->
+        <div class="field field-span-2">
+          <label for="message">Message <span aria-hidden="true" class="req">*</span></label>
+          <div class="textarea-wrap">
+            <textarea id="message" name="message" rows="6" placeholder="How can we help?" required maxlength="1500"></textarea>
+            <div class="char-counter" id="charCounter">0 / 1500</div>
           </div>
+        </div>
 
-          <div>
-            <button class="btn" type="submit">Send Message</button>
-          </div>
-        </form>
+        <!-- (Honeypot: simple bot trap; stays hidden) -->
+        <div class="hp">
+          <label for="company">Company</label>
+          <input id="company" name="company" type="text" tabindex="-1" autocomplete="off">
+        </div>
 
-        <!-- Status message -->
-        <div id="status" class="status" aria-live="polite"></div>
+        <div class="actions field-span-2">
+          <button id="submitBtn" class="btn" type="submit">
+            <span class="btn-label"><i class="fa-regular fa-paper-plane"></i> Send Message</span>
+            <span class="btn-spinner" aria-hidden="true"></span>
+          </button>
+        </div>
+      </form>
 
-      </div>
+      <!-- Toast status -->
+      <div id="status" class="toast" aria-live="polite" role="status"></div>
     </div>
-  </section>
-  <style>
-    .status {
-      margin-top: 16px;
-      padding: 12px 14px;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      font-weight: 500;
-      display: none; /* hidden until used */
+  </div>
+</section>
+
+<style>
+  .contact-card { padding: 28px; }
+  .contact-header { margin-bottom: 12px; }
+  .title-wrap { display:flex; align-items:center; gap:10px; }
+  .title-wrap i { color: var(--brand); font-size: 22px; }
+
+  .contact-grid{
+    display:grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap:16px;
+    margin-top: 8px;
+  }
+  .field { display:flex; flex-direction:column; gap:8px; }
+  .field-span-2 { grid-column: span 2; }
+  @media (max-width: 720px){
+    .contact-grid{ grid-template-columns: 1fr; }
+    .field-span-2 { grid-column: span 1; }
+  }
+
+  label{
+    font-weight: 600;
+    display:flex; align-items:center; gap:6px;
+  }
+  .req { color: var(--accent); font-weight: 700; }
+
+  .input-wrap{
+    display:flex; align-items:center; gap:10px;
+    background: var(--card);
+    border:1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
+  .input-wrap i{ color: var(--brand); opacity:.9; }
+  .input-wrap input{
+    border:none; outline:none; width:100%; background:transparent;
+    font: inherit;
+  }
+
+  .textarea-wrap{
+    position:relative;
+    border:1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+  }
+  .textarea-wrap textarea{
+    width:100%; border:none; outline:none; background:transparent; resize:vertical;
+    padding: 12px 12px 28px 12px; border-radius: 12px;
+    font: inherit;
+  }
+  .char-counter{
+    position:absolute; right:10px; bottom:6px;
+    font-size:.8rem; color: var(--muted);
+  }
+
+  .hint{ color: var(--muted); font-size:.9rem; margin-top:-2px; }
+
+  .actions{
+    display:flex; justify-content:flex-end; align-items:center;
+    margin-top: 2px;
+  }
+  .btn{
+    position:relative;
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 12px 16px; border-radius: 12px;
+    background: var(--brand); color:#fff; border:1px solid var(--brand);
+    transition: transform .15s ease, filter .15s ease;
+    cursor:pointer;
+  }
+  .btn:hover{ filter: brightness(0.96); transform: translateY(-1px); }
+  .btn[disabled]{ opacity:.7; cursor:not-allowed; transform:none; }
+
+  .btn-spinner{
+    width: 16px; height: 16px; border-radius:50%;
+    border: 2px solid rgba(255,255,255,.55);
+    border-top-color: #fff;
+    display:none;
+    animation: spin 0.7s linear infinite;
+  }
+  .btn.loading .btn-spinner{ display:inline-block; }
+  .btn.loading .btn-label{ opacity:.7; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Toast */
+  .toast{
+    position: fixed;
+    left: 50%; transform: translateX(-50%);
+    bottom: 24px;
+    min-width: 260px; max-width: 90vw;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-weight: 600;
+    display:none;
+    box-shadow: 0 10px 24px rgba(2,6,23,.18);
+    z-index: 1000;
+  }
+  .toast.show{ display:block; }
+  .toast.success{
+    background: #d1fae5; color:#065f46; border-color:#10b981;
+  }
+  .toast.error{
+    background: #fee2e2; color:#991b1b; border-color:#ef4444;
+  }
+
+  /* Hidden honeypot */
+  .hp{ position:absolute; left:-9999px; top:-9999px; height:0; width:0; overflow:hidden; }
+</style>
+
+<script>
+(function () {
+  const form = document.getElementById("contactForm");
+  const statusBox = document.getElementById("status");
+  const submitBtn = document.getElementById("submitBtn");
+  const charCounter = document.getElementById("charCounter");
+  const messageEl = document.getElementById("message");
+  const honeypot = document.getElementById("company"); // bot trap
+  let dismissTimer = null;
+
+  // Character counter
+  function updateCount() {
+    const max = messageEl.getAttribute("maxlength") ? parseInt(messageEl.getAttribute("maxlength"), 10) : 1500;
+    charCounter.textContent = `${messageEl.value.length} / ${max}`;
+  }
+  messageEl.addEventListener("input", updateCount);
+  updateCount();
+
+  function showToast(message, type) {
+    if (dismissTimer) clearTimeout(dismissTimer);
+    statusBox.textContent = message;
+    statusBox.className = "toast show " + (type === "success" ? "success" : "error");
+    dismissTimer = setTimeout(() => {
+      statusBox.textContent = "";
+      statusBox.className = "toast";
+    }, 5000);
+  }
+
+  function setLoading(loading) {
+    if (loading) {
+      submitBtn.classList.add("loading");
+      submitBtn.setAttribute("disabled", "disabled");
+    } else {
+      submitBtn.classList.remove("loading");
+      submitBtn.removeAttribute("disabled");
     }
-    .status.show { display: block; }
+  }
 
-    .status.success {
-      background: #d1fae5; /* light green */
-      color: #065f46;      /* dark green */
-      border-color: #10b981;
+  // Light client-side validation feedback
+  form.addEventListener("input", (e) => {
+    const el = e.target;
+    if (el.checkValidity()) {
+      el.classList.remove("invalid");
     }
-    .status.error {
-      background: #fee2e2; /* light red */
-      color: #991b1b;      /* dark red */
-      border-color: #ef4444;
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Basic client-side validation
+    const invalid = [...form.elements].filter(el =>
+      el.willValidate && !el.checkValidity()
+    );
+    if (invalid.length > 0) {
+      invalid[0].focus();
+      showToast(invalid[0].validationMessage || "Please fix the highlighted fields.", "error");
+      invalid.forEach(el => el.classList.add("invalid"));
+      return;
     }
-  </style>
 
-  <script>
-    (function () {
-      const form = document.getElementById("contactForm");
-      const statusBox = document.getElementById("status");
-      let dismissTimer = null;
+    // Honeypot—if filled, likely a bot; do nothing.
+    if (honeypot && honeypot.value.trim() !== "") {
+      return;
+    }
 
-      function showStatus(message, type) {
-        // Clear previous timer
-        if (dismissTimer) clearTimeout(dismissTimer);
+    // Build payload
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
 
-        statusBox.textContent = message;
-        statusBox.className = "status show " + (type === "success" ? "success" : "error");
-
-        // Auto-dismiss after 5s
-        dismissTimer = setTimeout(() => {
-          statusBox.textContent = "";
-          statusBox.className = "status";
-        }, 5000);
-      }
-
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const formData = new FormData(form);
-        const payload = Object.fromEntries(formData.entries());
-
-        try {
-          const res = await fetch("/contact-form-content", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-
-          const data = await res.json().catch(() => ({}));
-
-          if (res.ok && data.ok) {
-            showStatus(data.message || "Your message has been sent!", "success");
-            form.reset();
-          } else {
-            const msg = (data && data.message) || `Something went wrong (HTTP ${res.status}).`;
-            showStatus(msg, "error");
-          }
-        } catch (err) {
-          console.error(err);
-          showStatus("Network error. Please try again.", "error");
-        }
+    try {
+      setLoading(true);
+      const res = await fetch("/contact-form-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
-    })();
-  </script>
+
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.ok) {
+        showToast(data.message || "Your message has been sent!", "success");
+        form.reset();
+        updateCount();
+      } else {
+        const msg = (data && data.message) || `Something went wrong (HTTP ${res.status}).`;
+        showToast(msg, "error");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Network error. Please try again.", "error");
+    } finally {
+      setLoading(false);
+    }
+  });
+})();
+</script>
 {% endblock %}

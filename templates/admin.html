@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section page-admin">
+  <div class="inner">
+
+    <!-- Header -->
+    <div class="card admin-head">
+      <div class="admin-head-left">
+        <h1 class="h1" style="margin:0;">Admin</h1>
+        <div class="muted">Signed in as <span class="badge">{{ current_user.id }}</span></div>
+      </div>
+      <form method="post" action="/logout">
+        <button class="btn btn-ghost" type="submit"><i class="fa-solid fa-right-from-bracket"></i> Log out</button>
+      </form>
+    </div>
+
+    <!-- Builder -->
+    <div class="grid admin-grid">
+      <div class="card">
+        <h2 class="h2" style="margin-top:0;">Build ACH CSV</h2>
+        <p class="muted">Generate a CSV for a specific date and receive a one-time, short-lived download link.</p>
+
+        <div class="field">
+          <label for="batchDate">Batch date</label>
+          <input id="batchDate" type="date" />
+          <div class="quick-picks">
+            <button type="button" class="chip" data-pick="today">Today</button>
+            <button type="button" class="chip" data-pick="yesterday">Yesterday</button>
+            <button type="button" class="chip" data-pick="lastbiz">Last business day</button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="buildBtn" class="btn" type="button">
+            <span class="btn-label"><i class="fa-solid fa-gear"></i> Build CSV</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <!-- Status alert (success / error messages) -->
+        <div id="status" class="alert" role="status" aria-live="polite" style="display:none;"></div>
+      </div>
+
+      <!-- Results / Download -->
+      <div class="card">
+        <h3 class="h3" style="margin-top:0;">Result</h3>
+
+        <div class="viewer-toolbar">
+          <div class="muted tiny">Response JSON</div>
+          <button id="copyJsonBtn" class="btn btn-ghost tiny" type="button">
+            <i class="fa-regular fa-copy"></i> Copy JSON
+          </button>
+        </div>
+
+        <pre id="out" class="json-viewer" aria-label="Build response"></pre>
+
+        <div id="linkWrap" class="download-wrap" style="display:none;">
+          <a id="dlLink" class="btn" href="#" download>Download CSV (one-time)</a>
+          <button id="copyLinkBtn" class="btn btn-ghost" type="button"><i class="fa-regular fa-copy"></i> Copy link</button>
+          <p class="muted tiny" id="expiryNote">Link expires after one use or ~15 minutes.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  const out        = document.getElementById('out');
+  const linkWrap   = document.getElementById('linkWrap');
+  const buildBtn   = document.getElementById('buildBtn');
+  const dateEl     = document.getElementById('batchDate');
+  const statusEl   = document.getElementById('status');
+  const copyJsonBtn= document.getElementById('copyJsonBtn');
+  const copyLinkBtn= document.getElementById('copyLinkBtn');
+  const dlLink     = document.getElementById('dlLink');
+
+  // Default date → today (local)
+  const today = new Date();
+  dateEl.value = today.toISOString().slice(0,10);
+
+  // Quick pick handlers
+  function fmt(d){ return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10); }
+  function isWeekend(d){ const n=d.getDay(); return n===0 || n===6; }
+  function lastBusinessDay(from){
+    const d = new Date(from);
+    do { d.setDate(d.getDate() - 1); } while (isWeekend(d));
+    return d;
+  }
+
+  document.querySelectorAll('.chip[data-pick]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const k = el.getAttribute('data-pick');
+      if (k==='today') dateEl.value = fmt(new Date());
+      if (k==='yesterday'){ const d=new Date(); d.setDate(d.getDate()-1); dateEl.value = fmt(d); }
+      if (k==='lastbiz'){ dateEl.value = fmt(lastBusinessDay(new Date())); }
+    });
+  });
+
+  function setBusy(b){
+    buildBtn.disabled = b;
+    buildBtn.classList.toggle('is-busy', b);
+  }
+
+  function showStatus(kind, msg){
+    statusEl.style.display = 'block';
+    statusEl.className = 'alert ' + (kind==='ok' ? 'alert-success' : 'alert-error');
+    statusEl.innerHTML = msg;
+  }
+
+  async function build(){
+    out.textContent = '';
+    linkWrap.style.display = 'none';
+    statusEl.style.display = 'none';
+    setBusy(true);
+
+    const day = dateEl.value;
+    const qs = day ? ('?date=' + encodeURIComponent(day)) : '';
+
+    try {
+      const r = await fetch('/admin/build-csv' + qs, { method: 'POST' });
+      const text = await r.text();
+
+      let data;
+      try { data = JSON.parse(text); } catch(e) { data = { raw:text }; }
+
+      // Pretty print JSON
+      out.textContent = JSON.stringify(data, null, 2);
+      out.scrollTop = out.scrollHeight;
+
+      if (r.ok) {
+        showStatus('ok', '<i class="fa-solid fa-circle-check"></i> CSV build completed.');
+        if (data && data.download){
+          dlLink.href = data.download;
+          linkWrap.style.display = 'flex';
+        } else {
+          showStatus('ok', '<i class="fa-solid fa-circle-info"></i> Build succeeded, but no download link was returned.');
+        }
+      } else {
+        const err = (data && data.error) ? data.error : ('HTTP ' + r.status);
+        showStatus('err', '<i class="fa-solid fa-triangle-exclamation"></i> Error: ' + err);
+      }
+    } catch (err) {
+      showStatus('err', '<i class="fa-solid fa-wifi"></i> Network/JS error: ' + (err && err.message ? err.message : err));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  buildBtn.addEventListener('click', build);
+
+  // Copy JSON
+  copyJsonBtn.addEventListener('click', async ()=>{
+    try {
+      await navigator.clipboard.writeText(out.textContent || '');
+      copyJsonBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+      setTimeout(()=>copyJsonBtn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy JSON', 1200);
+    } catch {}
+  });
+
+  // Copy link
+  if (copyLinkBtn){
+    copyLinkBtn.addEventListener('click', async ()=>{
+      try {
+        await navigator.clipboard.writeText(dlLink.href || '');
+        copyLinkBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+        setTimeout(()=>copyLinkBtn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy link', 1200);
+      } catch {}
+    });
+  }
+})();
+</script>
+{% endblock %}

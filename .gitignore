@@ -1,24 +1,37 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+*.egg
+build/
+dist/
 
-# Elastic Beanstalk Files
+# --- Virtual environments ---
+.avika/
+venv/
+.venv/
+env/
+
+# --- Environment files ---
+.env
+.env.*
+private/
+
+# --- Flask instance (contains SQLite DB & runtime files) ---
+instance/
+
+# --- SQLite databases ---
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Elastic Beanstalk ---
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
-# Ignore Python cache
-__pycache__/
-*.pyc
-*.pyo
-
-# Ignore AVIKA-specific folder
-.avika/
-
-# Ignore Elastic Beanstalk configs
-.elasticbeanstalk/
-
-# (optional) Ignore virtual environments
-venv/
-.env/
-
-# (optional) Ignore OS/editor junk
+# --- OS/editor junk ---
 .DS_Store
 Thumbs.db
+

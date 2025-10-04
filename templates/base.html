@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,7 +6,7 @@
   <title>{{ title or "Your Billing Company" }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="icon" type="image/png" href="/static/img/icon.png">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/icon.png') }}">
 </head>
 <body>
   <header>
@@ -20,19 +19,54 @@
         <!--<a href="/#about">About</a>-->
         <a href="/#contact">Contact</a>
         <a href="/pay">Pay My Bill</a>
+        <a href="/login">Login</a>
       </nav>
     </div>
   </header>
 
   <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container" role="region" aria-live="polite">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}" role="alert" tabindex="0">
+              {{ message }}
+              <button class="flash-close" aria-label="Dismiss">&times;</button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
     {% block content %}{% endblock %}
   </main>
 
   <footer>
     © <span id="year"></span> Avika Billing Solution, LLC
   </footer>
+
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Flash dismiss logic
+    const flashes = document.querySelectorAll('.flash');
+    flashes.forEach(el => {
+      let dismissed = false;
+      const kill = () => { if (!dismissed) { el.remove(); dismissed = true; } };
+
+      // Close button
+      el.querySelector('.flash-close')?.addEventListener('click', kill);
+
+      // Pause auto-dismiss on hover/focus
+      let hovering = false;
+      el.addEventListener('mouseenter', () => hovering = true);
+      el.addEventListener('mouseleave', () => hovering = false);
+      el.addEventListener('focusin', () => hovering = true);
+      el.addEventListener('focusout', () => hovering = false);
+
+      // Auto-dismiss after 5s if not hovered/focused
+      setTimeout(() => { if (!hovering) kill(); }, 5000);
+    });
   </script>
 </body>
 </html>

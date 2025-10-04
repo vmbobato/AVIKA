@@ -1,12 +1,84 @@
-
 {% extends "base.html" %}
 {% block content %}
-  <section class="section">
-    <div class="inner">
-      <div class="card">
-        <h1>Page not found</h1>
-        <p class="muted">Use the navigation to continue.</p>
+<section class="section">
+  <div class="inner">
+    <div class="card notfound-card">
+      <div class="nf-emoji" aria-hidden="true">404</div>
+      <h1 class="nf-title"><i class="fa-solid fa-triangle-exclamation"></i> Page not found</h1>
+      <p class="muted nf-copy">
+        Sorry, we couldn’t find that page. It might have been moved or the link is incorrect.
+      </p>
+
+      <div class="nf-cta">
+        <a href="/" class="btn"><i class="fa-solid fa-house"></i> Go Home</a>
+        <a href="/pay" class="btn"><i class="fa-solid fa-credit-card"></i> Pay My Bill</a>
+        <a href="{{ url_for('contact') }}" class="btn"><i class="fa-solid fa-paper-plane"></i> Contact Us</a>
+        <button class="btn nf-back" type="button" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i> Go Back</button>
+      </div>
+
+      <div class="nf-links">
+        <div class="nf-col">
+          <h3>Popular</h3>
+          <ul>
+            <li><a href="/#services">Our Services</a></li>
+            <li><a href="/find-my-info">Find my invoice number</a></li>
+          </ul>
+        </div>
+        <div class="nf-col">
+          <h3>Support</h3>
+          <ul>
+            <li><a href="{{ url_for('contact') }}">Contact form</a></li>
+            <li><a href="mailto:billing@avika-bs.com">billing@avika-bs.com</a></li>
+          </ul>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<style>
+  .notfound-card{
+    text-align:center;
+    padding: 40px 28px;
+  }
+  .nf-emoji{
+    font-weight: 800;
+    letter-spacing: .04em;
+    font-size: clamp(48px, 12vw, 120px);
+    line-height: 1;
+    background: linear-gradient(90deg, color-mix(in oklab, var(--brand) 85%, white 0%), color-mix(in oklab, var(--accent) 85%, white 0%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 8px;
+  }
+  .nf-title{
+    margin: 0 0 6px 0;
+    font-size: clamp(20px, 3.2vw, 28px);
+  }
+  .nf-title i{ color: var(--accent); margin-right:6px; }
+  .nf-copy{
+    max-width: 70ch;
+    margin: 0 auto 14px;
+  }
+  .nf-cta{
+    display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+    margin: 10px 0 4px;
+  }
+  .nf-back{ background: var(--brand); } /* optional slight contrast; remove if you want all identical */
+  .nf-links{
+    margin-top: 18px;
+    display:grid; gap:12px; grid-template-columns: repeat(2, minmax(0, 200px));
+    justify-content:center;
+    text-align:left;
+  }
+  .nf-links h3{ margin: 8px 0 6px; font-size: 1rem; }
+  .nf-links ul{ list-style: none; margin:0; padding:0; }
+  .nf-links li{ margin: 6px 0; }
+  .nf-links a{ text-decoration: none; }
+  .nf-links a:hover{ text-decoration: underline; }
+  @media (max-width: 520px){
+    .nf-links{ grid-template-columns: 1fr; }
+  }
+</style>
 {% endblock %}
